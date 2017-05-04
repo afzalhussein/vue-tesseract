@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>OCR</title>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet" type="text/css">
+    <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+
+<body>
+    <div id="vue-app">
+        <v-snackbar :timeout="1000" :top="true" :right="true" v-model="progress">
+            {{progress_text}}
+            <v-btn flat class="pink--text" @click.native="progress = false">Close</v-btn>
+        </v-snackbar>
+        <v-app id="main-app">
+            <v-toolbar class="grey darken-4">
+                <v-toolbar-title>Canvas Optical Character Recognition</v-toolbar-title>
+            </v-toolbar>
+            <main>
+                <v-content>
+                    <v-container fluid class="pa-5" >
+                        <v-row>
+                            <v-col xl8 md8 xs12 >
+                                <canvas id="mainCanvas" width="900" height="500" @mouseleave.capture="leave" @mousemove.capture="drawing" @mouseup.capture="endDraw"
+                                    @mousedown.capture="startDraw"></canvas>
+                            </v-col>
+                            <v-col xl4 md4 xs12>
+                                <h5 class="red--text darken-4">Output:</h5>
+                                <h2>{{data}}</h2>
+                                <h3 class="blue--text" v-show="math_answer">{{math_answer}}</h3>
+                                
+                                <v-btn class="blue darken-1" @click.native="clearCanvas" ripple>CLEAR CANVAS</v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-content>
+            </main>
+        </v-app>
+
+    </div>
+
+    <script src="assets/bower_components/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vuetify/dist/vuetify.min.js"></script>
+    <script src='https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js'></script>
+    <script src="assets/bower_components/mathjs/dist/math.js"></script>
+    <script src="assets/_init.js"></script>
+</body>
+
+</html>
