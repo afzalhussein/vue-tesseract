@@ -1,5 +1,5 @@
 var app = new Vue({
-    el: '#vue-app',
+    el: '#app',
     data: {
         paint: false,
         clickX: [],
@@ -13,50 +13,45 @@ var app = new Vue({
     },
     methods: {
         startDraw(e) {
-            var mainCanvas = document.getElementById('mainCanvas')
+            var mainCanvas = document.getElementById('mainCanvas');
             var mouseX = e.pageX - mainCanvas.offsetLeft;
             var mouseY = e.pageY - mainCanvas.offsetTop;
             this.addClick(e.pageX - mainCanvas.offsetLeft, e.pageY - mainCanvas.offsetTop);
-            this.paint = true
+            this.paint = true;
             this.redraw();
         },
         endDraw(e) {
-            var _this = this
-            _this.paint = false
-            _this.data = 'Please wait...'
+            this.paint = false;
+            this.data = 'Please wait...';
             Tesseract.recognize(document.getElementById('mainCanvas').getContext("2d"))
-                .progress(function (message) {
-                    _this.progress = true
-                    _this.progress_text = message.status
+                .progress((message) => {
+                    this.progress = true;
+                    this.progress_text = message.status;
                 })
-                .then(function (result) {
-                    //console.log('r', result)
-                    _this.data = result.text
-                    _this.data_array = []
-                    result.symbols.forEach(function (str) {
-                        _this.data_array.push(str.text)
+                .then((result) => {
+                    this.data = result.text;
+                    this.data_array = [];
+                    result.symbols.forEach((str) => {
+                        this.data_array.push(str.text);
                     })
 
-                    if (_this.data_array.includes("+")) {
-                        var index = _this.data_array.indexOf("+") + 1
-                        var converted_array = _this.data_array.join('')
+                    if (this.data_array.includes('+')) {
+                        var index = this.data_array.indexOf('+') + 1;
+                        var converted_array = this.data_array.join('');
                         if(converted_array.slice(-1) !== '+') {
-                            console.log('aahhh')
-                            _this.math_answer = math.eval(converted_array)
-                        } else {
-                            console.log('wtf')
+                            this.math_answer = math.eval(converted_array);
                         }
-                        
                     }
-                }).catch(function (error) {
-                    console.log('e', error)
-                    _this.progress = true
-                    _this.progress_text = error
                 })
+                .catch((error) => {
+                    console.log('Error', error);
+                    this.progress = true;
+                    this.progress_text = error;
+                });
         },
         leave() {
             if (this.paint) {
-                this.endDraw()
+                this.endDraw();
             }
         },
         drawing(e) {
@@ -72,7 +67,7 @@ var app = new Vue({
         },
         redraw() {
             var mainCanvas = document.getElementById('mainCanvas').getContext("2d");
-            mainCanvas.clearRect(0, 0, mainCanvas.canvas.width, mainCanvas.canvas.height); // Clears the canvas
+            mainCanvas.clearRect(0, 0, mainCanvas.canvas.width, mainCanvas.canvas.height);
 
             mainCanvas.strokeStyle = "#FFFFFF";
             mainCanvas.lineJoin = "round";
@@ -92,7 +87,7 @@ var app = new Vue({
         },
         clearCanvas() {
             console.log('cleared')
-            var mainCanvas = document.getElementById('mainCanvas').getContext("2d");
+            var mainCanvas = document.getElementById('mainCanvas').getContext('2d');
             mainCanvas.clearRect(0, 0, mainCanvas.canvas.width, mainCanvas.canvas.height);
             this.clickX = []
             this.clickY = []
