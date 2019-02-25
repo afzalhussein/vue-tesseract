@@ -13,10 +13,9 @@ var app = new Vue({
     },
     methods: {
         startDraw(e) {
-            var mainCanvas = document.getElementById('mainCanvas');
-            var mouseX = e.pageX - mainCanvas.offsetLeft;
-            var mouseY = e.pageY - mainCanvas.offsetTop;
-            this.addClick(e.pageX - mainCanvas.offsetLeft, e.pageY - mainCanvas.offsetTop);
+            var mainCanvas = document.getElementById('mainCanvas'),
+                p = this.getMousePos(mainCanvas,e);
+            this.addClick(p.x, p.y);
             this.paint = true;
             this.redraw();
         },
@@ -56,7 +55,9 @@ var app = new Vue({
         },
         drawing(e) {
             if (this.paint) {
-                this.addClick(e.pageX - mainCanvas.offsetLeft, e.pageY - mainCanvas.offsetTop, true);
+                // this.addClick(e.pageX - mainCanvas.offsetLeft, e.pageY - mainCanvas.offsetTop, true);
+                let p = this.getMousePos(mainCanvas,e);
+                this.addClick(p.x, p.y,true);
                 this.redraw();
             }
         },
@@ -95,6 +96,13 @@ var app = new Vue({
             this.data_array = []
             this.math_answer = null
             this.data = 'Draw inside the box'
+        },
+        getMousePos(canvas, evt) {
+            var rect = canvas.getBoundingClientRect();
+            return {
+              x: evt.clientX - rect.left,
+              y: evt.clientY - rect.top
+            };
         }
     }
 })
